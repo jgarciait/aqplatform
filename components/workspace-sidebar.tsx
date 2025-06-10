@@ -146,14 +146,22 @@ export function WorkspaceSidebar({
 
         {/* Combined Form Search and Selection */}
         {!isCollapsed && (
-          <div className="p-4 border-b border-gray-200">
+          <div className="p-2 border-b border-gray-200">
+          {/* Show form count */}
+            <div className="text-xs text-gray-600">
+            {forms.length} {forms.length === 1 ? "form" : "forms"} in this workspace
+          </div>
             <div className="relative" ref={searchRef}>
               {/* Search input that looks like a selector */}
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 z-10" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blue-400 z-10" />
                 <Input
-                  placeholder="Search Forms"
-                  className="pl-9 pr-10 h-10 text-sm border border-gray-300 rounded-md"
+                  placeholder={
+                    !isCollapsed && selectedFormId
+                      ? `${forms.find(f => f.id === selectedFormId)?.title}`
+                      : 'Search Forms'
+                  }
+                  className={`pl-9 pr-10 h-10 text-sm border border-gray-300 rounded-md ${selectedFormId ? 'placeholder-blue-500' : ''}`}
                   value={dropdownSearchQuery}
                   onChange={(e) => {
                     setDropdownSearchQuery(e.target.value)
@@ -163,15 +171,18 @@ export function WorkspaceSidebar({
                   }}
                   onFocus={() => setIsDropdownOpen(true)}
                 />
-                {dropdownSearchQuery && (
+                {(dropdownSearchQuery || selectedFormId) && (
                   <button
                     onClick={() => {
                       setDropdownSearchQuery("")
                       setIsDropdownOpen(false)
+                      if (selectedFormId) {
+                        onFormSelect("")
+                      }
                     }}
-                    className="absolute right-8 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 hover:text-gray-600"
+                    className="absolute right-8 top-1/2 transform -translate-y-1/2 flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors"
                   >
-                    ×
+                    <span className="text-gray-600 text-xs font-medium">×</span>
                   </button>
                 )}
                 <button
@@ -190,7 +201,6 @@ export function WorkspaceSidebar({
                   aria-hidden="true"
                 />
               )}
-
               {/* Dropdown results */}
               {isDropdownOpen && (
                 <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
@@ -230,14 +240,8 @@ export function WorkspaceSidebar({
                 </div>
               )}
             </div>
-
-            {/* Show form count */}
-            <div className="mt-2 text-xs text-gray-600">
-              {forms.length} {forms.length === 1 ? "form" : "forms"} in this workspace
-            </div>
           </div>
         )}
-
         {/* Favorite Forms Section */}
         {!isCollapsed && favoriteForms.length > 0 && (
           <div className="flex-1 border-b border-gray-200">
@@ -267,9 +271,10 @@ export function WorkspaceSidebar({
             </ScrollArea>
           </div>
         )}
-
+      
         {/* Footer */}
         <div className="mt-auto border-t border-gray-200 p-4">
+       
           {!isCollapsed && (
             <>
               <Link href="/dashboard">
