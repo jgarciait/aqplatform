@@ -138,7 +138,7 @@ export default function LoginPage() {
 
         <div className="w-full max-w-md relative z-10">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2 text-white">AQPlatform</h1>
+            <h1 className="text-3xl font-bold mb-2 text-white">AQPlatform Cursor Version</h1>
             <p className="text-white opacity-90">
               Your all-in-one solution for E-Forms, Workflows, and Document Management
             </p>
