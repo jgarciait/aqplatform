@@ -17,9 +17,6 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-// Global flag to prevent multiple auth providers
-let authProviderInitialized = false
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
@@ -29,12 +26,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const mountedRef = useRef(true)
 
   useEffect(() => {
-    // Prevent multiple auth providers
-    if (authProviderInitialized) {
-      console.warn("AuthProvider already initialized, skipping...")
-      return
-    }
-    authProviderInitialized = true
+    mountedRef.current = true
 
     // Get initial session
     const getInitialSession = async () => {
@@ -43,10 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           data: { session },
           error,
         } = await supabase.auth.getSession()
-
-        if (error) {
-          console.error("Error getting session:", error)
-        }
+        console.log("Initial session:", session, "Error:", error);
 
         if (mountedRef.current) {
           setSession(session)
@@ -63,23 +52,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     getInitialSession()
 
-    // Set up auth state listener only if not already set
+    // Set up auth state listener
     if (!subscriptionRef.current) {
       const {
         data: { subscription },
-      } = supabase.auth.onAuthStateChange(async (event, session) => {
+      } = supabase.auth.onAuthStateChange(async (event: string, session: Session | null) => {
         if (mountedRef.current) {
-          console.log("Auth state changed:", event)
+          console.log("Auth state changed:", event, session)
           setSession(session)
           setUser(session?.user ?? null)
           setIsLoading(false)
 
-          // Handle navigation with proper checks
-          if (event === "SIGNED_IN" && session?.user) {
-            // No automatic redirect here. Let the middleware and specific page logic handle routing.
-            // For example, app/page.tsx already redirects from '/' to '/dashboard' if logged in.
-            // If /admin requires specific roles, implement that check within /admin/page.tsx or its layout.
-          } else if (event === "SIGNED_OUT") {
+          if (event === "SIGNED_OUT") {
             setTimeout(() => {
               if (window.location.pathname !== "/login") {
                 router.push("/login")
@@ -98,7 +82,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         subscriptionRef.current.unsubscribe()
         subscriptionRef.current = null
       }
-      authProviderInitialized = false
     }
   }, [router])
 
