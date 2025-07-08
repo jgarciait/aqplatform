@@ -71,7 +71,7 @@ export function AdminSidebar({ isCollapsed, onToggle }: AdminSidebarProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
 
-  const menuItems = [
+  const getMenuItems = () => [
     {
       title: "Dashboard",
       icon: LayoutDashboard,
@@ -81,46 +81,54 @@ export function AdminSidebar({ isCollapsed, onToggle }: AdminSidebarProps) {
     {
       title: "Form Builder",
       icon: FileText,
-      href: "/admin/forms",
+      href: selectedWorkspace ? `/admin/forms?workspace=${selectedWorkspace.id}` : "/admin/forms",
       active: pathname.startsWith("/admin/forms"),
     },
     {
       title: "Workflows",
       icon: GitBranch,
-      href: "/admin/workflows",
+      href: selectedWorkspace ? `/admin/workflows?workspace=${selectedWorkspace.id}` : "/admin/workflows",
       active: pathname.startsWith("/admin/workflows"),
     },
     {
       title: "Documents",
       icon: FolderOpen,
-      href: "/admin/documents",
-      active: pathname.startsWith("/admin/documents"),
+      href: selectedWorkspace ? `/admin/documents?workspace=${selectedWorkspace.id}` : "/admin/documents",
+      active: pathname.startsWith("/admin/documents") && !pathname.startsWith("/admin/mapping"),
+    },
+    {
+      title: "Document Mapping",
+      icon: FileText,
+      href: selectedWorkspace ? `/admin/mapping?workspace=${selectedWorkspace.id}` : "/admin/mapping",
+      active: pathname.startsWith("/admin/mapping"),
     },
     {
       title: "Reports",
       icon: BarChart3,
-      href: "/admin/reports",
+      href: selectedWorkspace ? `/admin/reports?workspace=${selectedWorkspace.id}` : "/admin/reports",
       active: pathname.startsWith("/admin/reports"),
     },
     {
       title: "Audit",
       icon: Shield,
-      href: "/admin/audit",
+      href: selectedWorkspace ? `/admin/audit?workspace=${selectedWorkspace.id}` : "/admin/audit",
       active: pathname.startsWith("/admin/audit"),
     },
     {
       title: "User Management",
       icon: Users,
-      href: "/admin/users",
+      href: selectedWorkspace ? `/admin/users?workspace=${selectedWorkspace.id}` : "/admin/users",
       active: pathname.startsWith("/admin/users"),
     },
     {
       title: "Archived Submissions",
       icon: Archive,
-      href: "/admin/archived-submissions",
+      href: selectedWorkspace ? `/admin/archived-submissions?workspace=${selectedWorkspace.id}` : "/admin/archived-submissions",
       active: pathname.startsWith("/admin/archived-submissions"),
     },
   ]
+
+  const menuItems = getMenuItems()
 
   const handleWorkspaceSelect = (workspace: any) => {
     setSelectedWorkspace(workspace)

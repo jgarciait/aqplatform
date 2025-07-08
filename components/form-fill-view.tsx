@@ -14,6 +14,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { AlertCircle, Loader2, Send } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { SignatureCanvas } from "@/components/signature-canvas"
 
 interface FormFillViewProps {
   formId: string
@@ -157,6 +158,27 @@ export function FormFillView({ formId, workspaceId, onSubmissionComplete }: Form
     const inputElement = (() => {
       switch (type) {
         case "single-line":
+          return (
+            <div className="space-y-2">
+              <Label htmlFor={id} className={error ? "text-red-500" : ""}>
+                {properties.label}
+                {properties.required && <span className="text-red-500 ml-1">*</span>}
+              </Label>
+              <Input
+                id={id}
+                value={value}
+                onChange={(e) => handleInputChange(id, e.target.value)}
+                placeholder={properties.placeholder}
+                type={properties.inputType || "text"}
+                minLength={properties.minLength}
+                maxLength={properties.maxLength}
+                className={error ? "border-red-500" : ""}
+              />
+              {error && <p className="text-xs text-red-500">{error}</p>}
+            </div>
+          )
+
+        case "text":
           return (
             <div className="space-y-2">
               <Label htmlFor={id} className={error ? "text-red-500" : ""}>
@@ -324,6 +346,24 @@ export function FormFillView({ formId, workspaceId, onSubmissionComplete }: Form
                   </option>
                 ))}
               </select>
+              {error && <p className="text-xs text-red-500">{error}</p>}
+            </div>
+          )
+
+        case "signature":
+          return (
+            <div className="space-y-2">
+              <Label htmlFor={id} className={error ? "text-red-500" : ""}>
+                {properties.label}
+                {properties.required && <span className="text-red-500 ml-1">*</span>}
+              </Label>
+              <SignatureCanvas
+                width={400}
+                height={150}
+                onSignatureChange={(signature) => handleInputChange(id, signature)}
+                initialSignature={value}
+                className={error ? "border-red-500" : ""}
+              />
               {error && <p className="text-xs text-red-500">{error}</p>}
             </div>
           )

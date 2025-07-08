@@ -1,0 +1,46 @@
+-- Setup para Document Mapping Storage
+-- La tabla documents y el enum document_type ya están configurados correctamente
+
+-- INSTRUCCIONES CRÍTICAS: Crear bucket "mapping" en Supabase
+-- 
+-- PASOS OBLIGATORIOS en Supabase Dashboard:
+-- 
+-- 1. Ve a Supabase Dashboard -> Storage
+-- 2. Crear nuevo bucket llamado: "mapping" 
+-- 3. Configurar como PRIVADO (no público)
+-- 4. Habilitar RLS (Row Level Security)
+-- 
+-- 5. Agregar estas políticas al bucket "mapping":
+--
+-- Política 1: "Users can upload documents"
+-- - Operación: INSERT  
+-- - Target roles: authenticated
+-- - Policy definition:
+--   (auth.role() = 'authenticated')
+--
+-- Política 2: "Users can view documents"  
+-- - Operación: SELECT
+-- - Target roles: authenticated
+-- - Policy definition:
+--   (auth.role() = 'authenticated')
+--
+-- Política 3: "Users can update documents"
+-- - Operación: UPDATE
+-- - Target roles: authenticated
+-- - Policy definition:
+--   (auth.role() = 'authenticated')
+--
+-- Política 4: "Users can delete documents"
+-- - Operación: DELETE
+-- - Target roles: authenticated
+-- - Policy definition:
+--   (auth.role() = 'authenticated')
+
+-- IMPORTANTE: 
+-- - El bucket DEBE llamarse exactamente "mapping"
+-- - DEBE ser privado para seguridad
+-- - Sin el bucket, las subidas de PDF fallarán con error 404
+
+-- Para verificar si el documento_type enum tiene los valores correctos:
+-- SELECT unnest(enum_range(NULL::document_type));
+-- Debería mostrar: 'form_builder' y 'mapping' 

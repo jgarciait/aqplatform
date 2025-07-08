@@ -297,6 +297,66 @@ export type Database = {
           updated_at?: string
         }
       }
+      // Documents table
+      documents: {
+        Row: {
+          id: string
+          workspace_id: string
+          owner_id: string
+          name: string
+          description: string | null
+          file_url: string | null
+          document_type: "pdf" | "image" | "template" | "form" | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          workspace_id: string
+          owner_id: string
+          name: string
+          description?: string | null
+          file_url?: string | null
+          document_type?: "pdf" | "image" | "template" | "form" | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          workspace_id?: string
+          owner_id?: string
+          name?: string
+          description?: string | null
+          file_url?: string | null
+          document_type?: "pdf" | "image" | "template" | "form" | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      // Document mappings table
+      document_mappings: {
+        Row: {
+          id: string
+          document_id: string
+          elements_json: Json
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          document_id: string
+          elements_json: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          document_id?: string
+          elements_json?: Json
+          created_at?: string
+          updated_at?: string
+        }
+      }
     }
   }
 }
@@ -313,3 +373,6 @@ export type WorkspaceType = "sender" | "recipient" | null
 export type Group = Database["public"]["Tables"]["groups"]["Row"]
 export type GroupMember = Database["public"]["Tables"]["group_members"]["Row"]
 export type WorkflowPermission = Database["public"]["Tables"]["workflow_permissions"]["Row"]
+export type Document = Database["public"]["Tables"]["documents"]["Row"]
+export type DocumentMapping = Database["public"]["Tables"]["document_mappings"]["Row"]
+export type Workspace = Database["public"]["Tables"]["workspaces"]["Row"]

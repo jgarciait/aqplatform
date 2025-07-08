@@ -300,7 +300,7 @@ export function FormSubmissionTable({
 
       {/* Submission Details Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-3xl">
+        <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Submission Details</DialogTitle>
           </DialogHeader>
@@ -370,6 +370,7 @@ export function FormSubmissionTable({
                           case "single-line":
                           case "multiline":
                           case "number":
+                          case "text":
                             return (
                               <div className="space-y-2">
                                 <label className="block text-sm font-medium text-gray-700">
@@ -510,6 +511,30 @@ export function FormSubmissionTable({
                               <div className="border border-dashed border-gray-300 p-4 rounded-md">
                                 <h4 className="font-semibold text-gray-700 mb-2">{properties.label}</h4>
                                 <p className="text-sm text-gray-500">{properties.placeholder || "This is a table."}</p>
+                              </div>
+                            )
+
+                          case "signature":
+                            return (
+                              <div className="space-y-2">
+                                <label className="block text-sm font-medium text-gray-700">
+                                  {properties.label}
+                                  {properties.required && <span className="text-red-500 ml-1">*</span>}
+                                </label>
+                                <div className="min-h-[120px] border border-gray-300 rounded-md bg-white p-2">
+                                  {displayValue === "No response" || !value ? (
+                                    <div className="h-full flex items-center justify-center">
+                                      <span className="text-gray-400 italic">No signature provided</span>
+                                    </div>
+                                  ) : (
+                                    <img 
+                                      src={value} 
+                                      alt="Signature" 
+                                      className="max-w-full max-h-full object-contain"
+                                      style={{ imageRendering: 'pixelated' }}
+                                    />
+                                  )}
+                                </div>
                               </div>
                             )
 

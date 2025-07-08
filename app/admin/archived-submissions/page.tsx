@@ -90,6 +90,7 @@ export default function ArchivedSubmissionsPage() {
         case "single-line":
         case "multiline":
         case "number":
+        case "text":
           return (
             <div className="min-h-[40px] px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-sm">
               {displayValue === "No response" ? (
@@ -192,6 +193,24 @@ export default function ArchivedSubmissionsPage() {
             <div className="border border-dashed border-gray-300 p-4 rounded-md">
               <h4 className="font-semibold text-gray-700 mb-2">{element.properties?.label}</h4>
               <p className="text-sm text-gray-500">{element.properties?.placeholder || "This is a table."}</p>
+            </div>
+          )
+
+        case "signature":
+          return (
+            <div className="min-h-[120px] border border-gray-300 rounded-md bg-white p-2">
+              {displayValue === "No response" || !value ? (
+                <div className="h-full flex items-center justify-center">
+                  <span className="text-gray-400 italic">No signature provided</span>
+                </div>
+              ) : (
+                <img 
+                  src={value} 
+                  alt="Signature" 
+                  className="max-w-full max-h-full object-contain"
+                  style={{ imageRendering: 'pixelated' }}
+                />
+              )}
             </div>
           )
 
